@@ -29,13 +29,11 @@ export default function Home({
   } = useFetchMatches();
 
   const loadMore = () => {
-    console.log('wduhwhu', hasNextPage)
     if (hasNextPage) {
       fetchNextPage();
     }
   };
 
-  console.log({data: data?.pages.map(i => i)}, {isLoading});
   return (
     <SafeAreaView className="bg-[#161621] flex-1">
       <StatusBar barStyle="light-content" />
@@ -43,56 +41,67 @@ export default function Home({
         <Text className="font-medium text-[32px] leading-[40px] text-white font-roboto">
           Partidas
         </Text>
-        {/* {isLoading ? (
+        {isLoading ? (
           <View className="items-center justify-center flex-1">
             <ActivityIndicator size="large" color="#fff" />
           </View>
-        ) : ( */}
+        ) : (
           <FlatList
             data={data?.pages.map(i => i).flat() || []}
-            keyExtractor={item => item.serie_id}
+            keyExtractor={item => item.serie_id.toString()}
             className="flex-1"
             renderItem={({item}: {item: MatchProps}) => (
               <View className="bg-[#272639] w-full h-[176px] mt-[24px] rounded-[16px]">
                 {item.status === 'running' ? (
-                  <View className="bg-red">
+                  <View className="bg-red rounded-s-sm">
                     <Text className="text-white font-roboto text-[12px]">
-                      {item.begin_at}
+                      Agora
                     </Text>
                   </View>
                 ) : (
-                  <View>
+                  <View className="rounded-tr-[16px] rounded-bl-[16px] bg-[#515060] w-fit self-end p-[8px]">
                     <Text className="text-white font-roboto text-[12px]">
                       {item.begin_at}
                     </Text>
                   </View>
                 )}
-                <View className="items-center justify-center flex-row">
-                  <View>
-                   {item.opponents[0].opponent.image_url ?  <Image
-                      source={{uri: item.opponents[0].opponent.image_url}}
-                    
-                      className='w-[60px] h-[60px] '
-                    /> : <View className='w-[60px] h-[60px] rounded-full bg-[#C4C4C4]' />  }
-                    <Text className="text-white font-roboto text-[10px]">
-                      {item.opponents[0].opponent.name}
+                <View className="items-center justify-center flex-row mt-[18.5px]">
+                  <View className="items-center">
+                    {item.opponents[0]?.opponent.image_url ? (
+                      <Image
+                        source={{uri: item.opponents[0].opponent.image_url}}
+                        className="w-[60px] h-[60px] "
+                      />
+                    ) : (
+                      <View className="w-[60px] h-[60px] rounded-full bg-[#C4C4C4]" />
+                    )}
+                    <Text className="text-white font-roboto text-[10px] mt-[10px]">
+                      {item.opponents[0]?.opponent.name || 'teste'}
                     </Text>
                   </View>
                   <Text className="text-uppercase font-roboto text-[12px] text-[#ffffff80] px-[20px]">
                     vs
                   </Text>
-                  <View>
-                    <Image
-                      source={{uri: item.opponents[1].opponent.image_url || ''}}
-                      style={{width: 60, height: 60}}
-                    />
-                    <Text className="text-white font-roboto text-[10px]">
-                      {item.opponents[1].opponent.name}
+                  <View className="items-center">
+                    {item.opponents[1]?.opponent.image_url ? (
+                      <Image
+                        source={{
+                          uri: item.opponents[1].opponent.image_url || '',
+                        }}
+                        style={{width: 60, height: 60}}
+                      />
+                    ) : (
+                      <View className="w-[60px] h-[60px] rounded-full bg-[#C4C4C4]" />
+                    )}
+                    <Text className="text-white font-roboto text-[10px] mt-[10px]">
+                      {item.opponents[1]?.opponent.name || 'teste'}
                     </Text>
                   </View>
                 </View>
-                <View>
-                  <Text className="text-white font-roboto text-[24px]">
+                <View className="w-full bg-[#C4C4C4] h-[1px] mt-[18.5px]" />
+                <View className="flex-row pl-[16px] items-center py-[8px]">
+                  <View className="w-[16px] h-[16px] rounded-full bg-[#C4C4C4]" />
+                   <Text className="text-white font-roboto text-[8px] ml-[8px]">
                     {item.league.name}
                   </Text>
                 </View>
@@ -122,7 +131,7 @@ export default function Home({
               )
             }
           />
-        // )}
+        )}
       </View>
     </SafeAreaView>
   );

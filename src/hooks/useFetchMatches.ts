@@ -23,7 +23,8 @@ export type MatchProps = {
 };
 
 async function fetchMatches({pageSize = 10}) {
-  const res = await api.get(`/csgo/matches?page[size]=${pageSize}`);
+  const res = await api.get(`/csgo/matches?page[size]=${pageSize}`, {
+  });
 
   return res.data;
 }
@@ -33,6 +34,7 @@ export function useFetchMatches() {
     queryKey: ['matches'],
     queryFn: ({pageParam}) => fetchMatches({pageSize: pageParam}),
     initialPageParam: 10,
-    getNextPageParam: lastPage => {},
+    getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+    getPreviousPageParam: (firstPage, pages) => firstPage.prevCursor,
   });
 }
