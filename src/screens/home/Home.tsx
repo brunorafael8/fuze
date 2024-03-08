@@ -3,7 +3,6 @@ import React from 'react';
 import {
   ActivityIndicator,
   FlatList,
-  Image,
   RefreshControl,
   SafeAreaView,
   StatusBar,
@@ -12,6 +11,7 @@ import {
 } from 'react-native';
 import {useFetchMatches} from '../../hooks';
 import {MatchProps} from '../../hooks/useFetchMatches';
+import {MatchItem} from './partials';
 
 export default function Home({
   navigation,
@@ -34,7 +34,6 @@ export default function Home({
     }
   };
 
-  console.log(data?.pages.map(i => i).flat()[0].games)
   return (
     <SafeAreaView className="bg-[#161621] flex-1">
       <StatusBar barStyle="light-content" />
@@ -52,61 +51,7 @@ export default function Home({
             keyExtractor={item => item.id.toString()}
             className="flex-1"
             renderItem={({item}: {item: MatchProps}) => (
-              <View className="bg-[#272639] w-full h-auto mt-[24px] rounded-[16px]">
-                {item.status === 'running' ? (
-                  <View className="bg-red rounded-s-sm">
-                    <Text className="text-white font-roboto text-[12px]">
-                      Agora
-                    </Text>
-                  </View>
-                ) : (
-                  <View className="rounded-tr-[16px] rounded-bl-[16px] bg-[#515060] w-fit self-end p-[8px]">
-                    <Text className="text-white font-roboto text-[12px]">
-                      {item.begin_at}
-                    </Text>
-                  </View>
-                )}
-                <View className="items-center justify-center flex-row mt-[18.5px]">
-                  <View className="items-center">
-                    {item.opponents[0]?.opponent.image_url ? (
-                      <Image
-                        source={{uri: item.opponents[0].opponent.image_url}}
-                        className="w-[60px] h-[60px] "
-                      />
-                    ) : (
-                      <View className="w-[60px] h-[60px] rounded-full bg-[#C4C4C4]" />
-                    )}
-                    <Text className="text-white font-roboto text-[10px] mt-[10px]">
-                      {item.opponents[0]?.opponent.name || 'teste'}
-                    </Text>
-                  </View>
-                  <Text className="text-uppercase font-roboto text-[12px] text-[#ffffff80] px-[20px]">
-                    vs
-                  </Text>
-                  <View className="items-center">
-                    {item.opponents[1]?.opponent.image_url ? (
-                      <Image
-                        source={{
-                          uri: item.opponents[1].opponent.image_url || '',
-                        }}
-                        style={{width: 60, height: 60}}
-                      />
-                    ) : (
-                      <View className="w-[60px] h-[60px] rounded-full bg-[#C4C4C4]" />
-                    )}
-                    <Text className="text-white font-roboto text-[10px] mt-[10px]">
-                      {item.opponents[1]?.opponent.name || 'teste'}
-                    </Text>
-                  </View>
-                </View>
-                <View className="w-full bg-[#C4C4C4] h-[1px] mt-[18.5px]" />
-                <View className="flex-row pl-[16px] items-center py-[8px]">
-                  <View className="w-[16px] h-[16px] rounded-full bg-[#C4C4C4]" />
-                   <Text className="text-white font-roboto text-[8px] ml-[8px]">
-                    {item.league.name}
-                  </Text>
-                </View>
-              </View>
+              <MatchItem item={item} />
             )}
             onRefresh={() => refetch()}
             refreshControl={
@@ -128,7 +73,11 @@ export default function Home({
             )}
             ListFooterComponent={() =>
               isFetchingNextPage && (
-                <ActivityIndicator size="large" color="#fff" className='mt-[16px]' />
+                <ActivityIndicator
+                  size="large"
+                  color="#fff"
+                  className="mt-[16px]"
+                />
               )
             }
           />
