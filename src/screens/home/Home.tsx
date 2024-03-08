@@ -29,11 +29,12 @@ export default function Home({
   } = useFetchMatches();
 
   const loadMore = () => {
-    if (hasNextPage) {
+    if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   };
 
+  console.log(data?.pages.map(i => i).flat()[0].games)
   return (
     <SafeAreaView className="bg-[#161621] flex-1">
       <StatusBar barStyle="light-content" />
@@ -48,10 +49,10 @@ export default function Home({
         ) : (
           <FlatList
             data={data?.pages.map(i => i).flat() || []}
-            keyExtractor={item => item.serie_id.toString()}
+            keyExtractor={item => item.id.toString()}
             className="flex-1"
             renderItem={({item}: {item: MatchProps}) => (
-              <View className="bg-[#272639] w-full h-[176px] mt-[24px] rounded-[16px]">
+              <View className="bg-[#272639] w-full h-auto mt-[24px] rounded-[16px]">
                 {item.status === 'running' ? (
                   <View className="bg-red rounded-s-sm">
                     <Text className="text-white font-roboto text-[12px]">
@@ -117,7 +118,7 @@ export default function Home({
             }
             refreshing={isFetching}
             onEndReached={loadMore}
-            onEndReachedThreshold={0.1}
+            onEndReachedThreshold={0.5}
             ListEmptyComponent={() => (
               <View className="items-center justify-center h-full">
                 <Text className="text-white font-roboto text-[24px]">
@@ -127,7 +128,7 @@ export default function Home({
             )}
             ListFooterComponent={() =>
               isFetchingNextPage && (
-                <ActivityIndicator size="large" color="#fff" />
+                <ActivityIndicator size="large" color="#fff" className='mt-[16px]' />
               )
             }
           />
