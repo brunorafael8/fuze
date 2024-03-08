@@ -1,6 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Home} from '../screens';
+import {Home, MatchDetails} from '../screens';
 
 const Stack = createStackNavigator();
 
@@ -13,6 +13,7 @@ export default function Navigator() {
         }}
         initialRouteName="home">
         <Stack.Screen name="home" component={Home} />
+        <Stack.Screen name="match-details" component={MatchDetails} />
       </Stack.Navigator>
     </>
   );
