@@ -2,6 +2,7 @@ import {useInfiniteQuery} from '@tanstack/react-query';
 import api from '../services/api';
 
 export type MatchProps = {
+  id: string;
   begin_at: string;
   league_id: number;
   status: 'canceled' | 'finished' | 'not_started' | 'postponed' | 'running';
@@ -34,7 +35,12 @@ export function useFetchMatches() {
     queryKey: ['matches'],
     queryFn: ({pageParam}) => fetchMatches({pageSize: pageParam}),
     initialPageParam: 10,
-    getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.length === 0) {
+        return undefined;
+      }
+      return lastPage.length + 1;
+    },
     getPreviousPageParam: (firstPage, pages) => firstPage.prevCursor,
   });
 }
